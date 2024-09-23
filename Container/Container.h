@@ -17,6 +17,22 @@ template <typename T> class Ptr_to_const {
   friend class Array_data<T>;
   friend class Pointer<T>;
 
+  friend Ptr_to_const<T> operator+(const Ptr_to_const<T> &p, int n);
+  friend Ptr_to_const<T> operator+(int n, const Ptr_to_const<T> &p);
+  friend Ptr_to_const<T> operator-(const Ptr_to_const<T> &p, int n);
+
+  friend int operator-(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2) {
+    return int(p1.index) - int(p2.index);
+  }
+  friend int operator-(const Pointer<T> &p1, const Pointer<T> &p2);
+
+  friend bool operator==(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2);
+  friend bool operator!=(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2);
+  friend bool operator<(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2);
+  friend bool operator>(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2);
+  friend bool operator<=(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2);
+  friend bool operator>=(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2);
+
 public:
   Ptr_to_const(const Array<T> &a, unsigned i = 0);
   Ptr_to_const();
@@ -24,6 +40,38 @@ public:
   ~Ptr_to_const();
   Ptr_to_const &operator=(const Ptr_to_const &p);
   const T &operator*() const;
+
+  Ptr_to_const &operator++() {
+    ++index;
+    return *this;
+  }
+
+  Ptr_to_const operator++(int) {
+    Ptr_to_const tmp = *this;
+    ++index;
+    return tmp;
+  }
+
+  Ptr_to_const &operator--() {
+    --index;
+    return *this;
+  }
+
+  Ptr_to_const operator--(int) {
+    Ptr_to_const tmp = *this;
+    --index;
+    return tmp;
+  }
+
+  Ptr_to_const &operator+=(int n) {
+    index += n;
+    return *this;
+  }
+
+  Ptr_to_const &operator-=(int n) {
+    index -= n;
+    return *this;
+  }
 
 private:
   Array_data<T> *ap;
@@ -40,6 +88,42 @@ public:
   Pointer(Array<T> &a, unsigned i = 0);
   Pointer();
   T &operator*() const;
+
+  Pointer &operator++() {
+    ++this->index;
+    return *this;
+  }
+
+  Pointer operator++(int) {
+    Pointer tmp = *this;
+    ++this->index;
+    return tmp;
+  }
+
+  Pointer &operator--() {
+    --this->index;
+    return *this;
+  }
+
+  Pointer operator--(int) {
+    Pointer tmp = *this;
+    --this->index;
+    return tmp;
+  }
+
+  Pointer &operator+=(int n) {
+    this->index += n;
+    return *this;
+  }
+
+  Pointer &operator-=(int n) {
+    this->index -= n;
+    return *this;
+  }
+
+  friend int operator-(const Pointer<T> &p1, const Pointer<T> &p2) {
+    return int(p1.index) - int(p2.index);
+  }
 };
 
 // Array class
@@ -209,11 +293,79 @@ template <typename T> void Array_data<T>::grow(unsigned new_size) {
   resize(nsz);
 }
 
-template <typename T>
-void Array_data<T>::clone(const Array_data &a) {
+template <typename T> void Array_data<T>::clone(const Array_data &a) {
   delete[] data;
   data = new T[sz = a.sz];
   copy(a.data, a.sz);
+}
+
+template <typename T> Pointer<T> operator+(const Pointer<T> &p, int n) {
+  Pointer<T> tmp = p;
+  tmp += n;
+  return tmp;
+}
+
+template <typename T> Pointer<T> operator+(int n, const Pointer<T> &p) {
+  return p + n;
+}
+
+template <typename T> Pointer<T> operator-(const Pointer<T> &p, int n) {
+  Pointer<T> tmp = p;
+  tmp -= n;
+  return tmp;
+}
+
+template <typename T>
+Ptr_to_const<T> operator+(const Ptr_to_const<T> &p, int n) {
+  Ptr_to_const<T> tmp = p;
+  tmp += n;
+  return tmp;
+}
+
+template <typename T>
+Ptr_to_const<T> operator+(int n, const Ptr_to_const<T> &p) {
+  return p + n;
+}
+
+template <typename T>
+Ptr_to_const<T> operator-(const Ptr_to_const<T> &p, int n) {
+  Ptr_to_const<T> tmp = p;
+  tmp -= n;
+  return tmp;
+}
+
+template <typename T>
+bool operator==(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2) {
+  if (p1.ap != p2.ap)
+    return false;
+  return p1.index == p2.index;
+}
+
+template <typename T>
+bool operator!=(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2) {
+  return !(p1 == p2);
+}
+
+template <typename T>
+bool operator<(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2) {
+  if (p1.ap != p2.ap)
+    throw std::runtime_error("comparing unrelated pointers");
+  return p1.index < p2.index;
+}
+
+template <typename T>
+bool operator>(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2) {
+  return p2 < p1;
+}
+
+template <typename T>
+bool operator<=(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2) {
+  return !(p2 < p1);
+}
+
+template <typename T>
+bool operator>=(const Ptr_to_const<T> &p1, const Ptr_to_const<T> &p2) {
+  return !(p1 < p2);
 }
 
 #endif // ARRAY_H

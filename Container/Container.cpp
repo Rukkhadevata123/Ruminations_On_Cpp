@@ -21,9 +21,10 @@ int main() {
     std::cout << std::endl;
 
     // 测试Ptr_to_const类的只读访问
-    Ptr_to_const<int> const_p(arr, 0); // 指向第一个元素的只读指针
+    Ptr_to_const<int> const_p1(arr, 0); // 指向第一个元素的只读指针
+    Ptr_to_const<int> const_p2(arr, 1); // 指向第二个元素的只读指针
 
-    std::cout << "通过Ptr_to_const访问第一个元素: " << *const_p << std::endl;
+    std::cout << "通过Ptr_to_const访问第一个元素: " << *const_p1 << std::endl;
 
     // 测试数组的克隆拷贝
     Array<int> arr_copy = arr; // 使用拷贝构造函数
@@ -54,6 +55,54 @@ int main() {
       std::cout << arr[i] << " ";
     }
     std::cout << std::endl;
+
+    // 测试指针运算
+    Pointer<int> p3(arr, 2); // 指向第三个元素的指针
+    *p3 = 50;
+
+    std::cout << "通过Pointer访问和修改第三个元素: " << *p3 << std::endl;
+
+    // 指针加法运算，指向第五个元素
+    Pointer<int> p4 = p3 + 2;
+    *p4 = 100;
+    std::cout << "Pointer加法运算后指向第五个元素: " << *p4 << std::endl;
+
+    // 指针减法运算，指向第四个元素
+    Pointer<int> p5 = p4 - 1;
+    *p5 = 75;
+    std::cout << "Pointer减法运算后指向第四个元素: " << *p5 << std::endl;
+
+    // 使用+=运算符，指向第六个元素
+    p5 += 2;
+    std::cout << "Pointer使用+=运算符后指向第六个元素: " << *p5 << std::endl;
+
+    // 使用-=运算符，指向第四个元素
+    p5 -= 2;
+    std::cout << "Pointer使用-=运算符后指向第四个元素: " << *p5 << std::endl;
+
+    // 前置递增运算，指向第五个元素
+    ++p5;
+    std::cout << "Pointer前置递增运算后指向第五个元素: " << *p5 << std::endl;
+
+    // 后置递增运算，指向第六个元素
+    p5++;
+    std::cout << "Pointer后置递增运算后指向第六个元素: " << *p5 << std::endl;
+
+    // 前置递减运算，指向第五个元素
+    --p5;
+    std::cout << "Pointer前置递减运算后指向第五个元素: " << *p5 << std::endl;
+
+    // 后置递减运算，指向第四个元素
+    p5--;
+    std::cout << "Pointer后置递减运算后指向第四个元素: " << *p5 << std::endl;
+
+    // 测试两个指针相减
+    int diff = p4 - p3;
+    std::cout << "两个Pointer指针相减的结果: " << diff << std::endl;
+
+    // 测试两个Ptr_to_const指针相减
+    int const_diff = const_p2 - const_p1;
+    std::cout << "两个Ptr_to_const指针相减的结果: " << const_diff << std::endl;
 
     // 测试越界访问
     std::cout << "尝试访问越界元素（将抛出异常）:" << std::endl;
