@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "clang++",
+            "args": [
+                "-g",
+                "-o",
+                "${workspaceFolder}/main",
+                "${file}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "${workspaceFolder}/main"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
